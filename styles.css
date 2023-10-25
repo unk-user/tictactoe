@@ -1,0 +1,25 @@
+html {
+    height: 100%; 
+    width: 100%;
+}
+body{ 
+    height: 100%;
+    width: 100%;
+}
+#gridContainer {
+    height: 700px;
+    width: 700px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    background-color: black;
+}
+#gridContainer>div {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4rem;
+}
