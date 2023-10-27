@@ -18,14 +18,11 @@ body{
 }
 #startSelect {
     margin: auto;
+    margin-top: 20px;
     width: 250px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: reapeat(2, 1fr);
-}
-#startSelect>p {
-    grid-column: 1 / 3;
-    text-align: center;
+    grid-template-rows: repeat(2, 1fr);
 }
 #startSelect>button {
     height: 50px;
@@ -41,4 +38,10 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+#turnMsg {
+    text-align: center;
+}
+#restart {
+    grid-column: 1/3;
 }

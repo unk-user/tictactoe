@@ -1,18 +1,20 @@
 const game = (function(){
     let gameBoard = ['', '', '', '', '', '', '', '', ''];
     const updateGridItem = (turn, index) => {
-        if(gameBoard[index] === ''){
+        if(gameBoard[index] === '' && win === false && tie === false){
             gameBoard[index] = turn.getSign();
         } 
         loadGridItem();
     }
-    const loadGridItem = () => {    
-        let gridItems = document.querySelectorAll('.gridItem');  
+    const loadGridItem = () => {
         for(let i = 0; i < gameBoard.length; i++){
             gridItems[i].textContent = gameBoard[i];
         }
     }
-    return {gameBoard, updateGridItem, loadGridItem};
+    const getBoardSign = (index) => {
+        return gameBoard[index];
+    }
+    return {gameBoard, updateGridItem, loadGridItem, getBoardSign};
 })();
 
 function createPlayer(player) {
@@ -27,10 +29,14 @@ function createPlayer(player) {
 }
 
 const startBtns = document.querySelectorAll('#startBtn');
+const turnMsg = document.querySelector('#turnMsg');
+const restart = document.querySelector('#restart');
+
 const gameStart = (function(){
     let player1 = createPlayer('player1');
     let player2 = createPlayer('player2');
     let selectionPhase = true;
+    let move = 0;
     
     const initGame = (event) => {
         if(event.target.className === 'X'){
@@ -41,10 +47,13 @@ const gameStart = (function(){
             player2.giveSign('X');
         }
     }
-    return {player1, player2, selectionPhase, initGame}
+    return {player1, player2, selectionPhase, move, initGame}
 })()
 
 let turn = gameStart.player1;
+let win = false;
+let winnerRow = [];
+let tie = false;
 startBtns.forEach(button => {
     button.addEventListener('click', (event) => {
         if(gameStart.selectionPhase){
@@ -53,17 +62,74 @@ startBtns.forEach(button => {
         }
     })
 })
+
+const checkWinner = () => {
+    let winConditions = [[0, 1, 2],
+                         [3, 4, 5], 
+                         [6, 7, 8], 
+                         [0, 3, 6], 
+                         [1, 4, 7], 
+                         [2, 5, 8], 
+                         [0, 4, 8], 
+                         [2, 4, 6]];
+    for(let i = 0; i < winConditions.length; i++){
+        let a = game.gameBoard[winConditions[i][0]];
+        let b = game.gameBoard[winConditions[i][1]];
+        let c = game.gameBoard[winConditions[i][2]];
+        if(a === b && b === c && a !== ''){
+            win = true;
+            winnerRow = winConditions[i];
+            turnMsg.textContent = `${a} is the Winner`
+            return winnerRow;
+        }
+    }
+    
+}
+const checkTie = () =>{
+    if(gameStart.move === 9 && win === false){
+        turnMsg.textContent = 'its a tie';
+        tie = true;
+    }
+}
+const switchTurn = () => {
+    if(turn === gameStart.player1 && turn.getSign() !== '' && tie === false){
+        turn = gameStart.player2;
+        turnMsg.textContent = `${gameStart.player2.getSign()}'s turn`;
+    } else if(turn === gameStart.player2 && turn.getSign() !== '' && tie === false){
+        turn = gameStart.player1;
+        turnMsg.textContent = `${gameStart.player1.getSign()}'s turn`;
+    }
+}
+
 const gridItems = document.querySelectorAll('.gridItem');
 gridItems.forEach((button, index) => {
     button.addEventListener('click', () => {
+        let sign = game.getBoardSign(index);
         game.updateGridItem(turn, index);
-        if(turn === gameStart.player1){
-            turn = gameStart.player2
-        } else if(turn === gameStart.player2){
-            turn = gameStart.player1;
-        }
+        if(sign === ''){
+            switchTurn();
+            gameStart.move++;
+        }    
+        checkWinner();
+        checkTie();
     })
 })
+const resetGame = () => {
+    game.gameBoard = ['', '', '', '', '', '', '', '', ''];
+    gameStart.player1.giveSign('');
+    gameStart.player2.giveSign('');
+    gameStart.selectionPhase = true;
+    gameStart.move = 0;
+    turn = gameStart.player1;
+    win = false;
+    winnerRow = [];
+    tie = false;
+    turnMsg.textContent = 'choose starting player';
+    game.loadGridItem() 
+    gridItems.forEach((item) => {
+        item.textContent = '';
+        item.innerHTML = '';
+    }) 
+}
 
-
-window.onload = game.loadGridItem();
+restart.addEventListener('click', resetGame);
