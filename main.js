@@ -1,11 +1,12 @@
 const game = (function(){
-    let gameBoard = ['', '', '', '', '', '', '', '', ''];
+    let gameBoard = ['', '', '', '', '', '', '', '', ''];;
     const updateGridItem = (turn, index) => {
-        if(gameBoard[index] === '' && win === false && tie === false){
-            gameBoard[index] = turn.getSign();
-        } 
+        if (gameBoard[index] === '' && win === false && tie === false) {
+          gameBoard[index] = turn.getSign();
+          game.gameBoard[index] = turn.getSign();
+        }
         loadGridItem();
-    }
+      };
     const loadGridItem = () => {
         for(let i = 0; i < gameBoard.length; i++){
             gridItems[i].textContent = gameBoard[i];
@@ -14,7 +15,10 @@ const game = (function(){
     const getBoardSign = (index) => {
         return gameBoard[index];
     }
-    return {gameBoard, updateGridItem, loadGridItem, getBoardSign};
+    const initBoard = () => {
+        return gameBoard = ['', '', '', '', '', '', '', '', ''];
+    }
+    return {gameBoard, updateGridItem, loadGridItem, getBoardSign, initBoard};
 })();
 
 function createPlayer(player) {
@@ -76,7 +80,7 @@ const checkWinner = () => {
         let a = game.gameBoard[winConditions[i][0]];
         let b = game.gameBoard[winConditions[i][1]];
         let c = game.gameBoard[winConditions[i][2]];
-        if(a === b && b === c && a !== ''){
+        if(a !== '' && a === b && b === c){
             win = true;
             winnerRow = winConditions[i];
             turnMsg.textContent = `${a} is the Winner`
@@ -101,21 +105,24 @@ const switchTurn = () => {
     }
 }
 
-const gridItems = document.querySelectorAll('.gridItem');
+let gridItems = document.querySelectorAll('.gridItem');
 gridItems.forEach((button, index) => {
     button.addEventListener('click', () => {
         let sign = game.getBoardSign(index);
         game.updateGridItem(turn, index);
-        if(sign === ''){
+        if(sign === '' && gameStart.selectionPhase === false){
             switchTurn();
             gameStart.move++;
-        }    
+        }
         checkWinner();
         checkTie();
+        game.updateGridItem(turn, index);
     })
+    game.loadGridItem();
 })
 const resetGame = () => {
     game.gameBoard = ['', '', '', '', '', '', '', '', ''];
+    game.initBoard();
     gameStart.player1.giveSign('');
     gameStart.player2.giveSign('');
     gameStart.selectionPhase = true;
@@ -125,11 +132,7 @@ const resetGame = () => {
     winnerRow = [];
     tie = false;
     turnMsg.textContent = 'choose starting player';
-    game.loadGridItem() 
-    gridItems.forEach((item) => {
-        item.textContent = '';
-        item.innerHTML = '';
-    }) 
+    game.loadGridItem();
 }
 
 restart.addEventListener('click', resetGame);
