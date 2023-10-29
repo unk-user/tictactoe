@@ -58,6 +58,9 @@ let turn = gameStart.player1;
 let win = false;
 let winnerRow = [];
 let tie = false;
+let winnerGrid1;
+let winnerGrid2;
+let winnerGrid3;
 startBtns.forEach(button => {
     button.addEventListener('click', (event) => {
         if(gameStart.selectionPhase){
@@ -93,6 +96,10 @@ const checkTie = () =>{
     if(gameStart.move === 9 && win === false){
         turnMsg.textContent = 'its a tie';
         tie = true;
+        gridItems.forEach((item) => {
+            item.style.backgroundColor = 'var(--tie)';
+            item.style.transition = '1s';
+        })
     }
 }
 const switchTurn = () => {
@@ -117,6 +124,20 @@ gridItems.forEach((button, index) => {
         checkWinner();
         checkTie();
         game.updateGridItem(turn, index);
+        if(win){
+        winnerGrid1 = gridItems[winnerRow[0]];
+        winnerGrid2 = gridItems[winnerRow[1]];
+        winnerGrid3 = gridItems[winnerRow[2]];
+        winnerGrid1.style.backgroundColor = 'var(--win)';
+        winnerGrid2.style.backgroundColor = 'var(--win)';
+        winnerGrid3.style.backgroundColor = 'var(--win)';
+        winnerGrid1.style.transform = 'scale(1.02)';
+        winnerGrid2.style.transform = 'scale(1.02)';
+        winnerGrid3.style.transform = 'scale(1.02)';
+        winnerGrid1.style.transition = '0.4s';
+        winnerGrid2.style.transition = '0.8s';
+        winnerGrid3.style.transition = '1.2s';
+        }
     })
     game.loadGridItem();
 })
@@ -133,6 +154,15 @@ const resetGame = () => {
     tie = false;
     turnMsg.textContent = 'choose starting player';
     game.loadGridItem();
+    winnerGrid1.style.backgroundColor = '#FFFFFF';
+    winnerGrid2.style.backgroundColor = '#FFFFFF';
+    winnerGrid3.style.backgroundColor = '#FFFFFF';
 }
 
-restart.addEventListener('click', resetGame);
+restart.addEventListener('click', () => {
+    resetGame();
+    gridItems.forEach((item) => {
+        item.style.backgroundColor = 'var(--primary)';
+        item.style.transform = 'scale(1)';
+    })
+});
