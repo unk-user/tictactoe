@@ -35,8 +35,8 @@ const initGame = (event) => {
         player1.giveSign('O');
         computer.giveSign('X');
     }
-    game.gameBoard[0] = computer.getSign();
-    game.updateGridItem(computer.getSign(), 0);
+    game.gameBoard[4] = computer.getSign();
+    game.updateGridItem(computer.getSign(), 4);
     currentSign = player1.getSign();
     move = 1;
 }
