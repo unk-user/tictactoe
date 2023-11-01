@@ -198,7 +198,7 @@ const minimax = (board, depth, isComputer) => {
                 board[i] = computer.getSign();
                 let score = minimax(board, depth + 1, false);
                 board[i] = '';
-                if(score >= bestScore || bestScore === 0 && winDepth <= bestMoveDepth){
+                if(score >= bestScore && winDepth <= bestMoveDepth){
                     bestMove = i;
                     bestMoveDepth = winDepth;
                 };
