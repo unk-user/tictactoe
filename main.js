@@ -195,7 +195,7 @@ const minimax = (board, depth, isComputer) => {
                 board[i] = computer.getSign();
                 let score = minimax(board, depth + 1, false);
                 board[i] = '';
-                if(score >= bestScore || bestScore === 0){bestMove = i};
+                if(score > bestScore || bestScore === 0){bestMove = i};
                 bestScore = Math.max(score, bestScore);
             }
         }
