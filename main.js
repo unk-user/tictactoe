@@ -180,13 +180,10 @@ let scores = {
 };
 let bestScore = -Infinity;
 const minimax = (board, depth, isComputer) => {
-    let winDepth;
-    let bestMoveDepth = 9;
     checkWinner();
     checkTie();
     if(win){
         win = false;
-        winDepth = depth;
         return scores[winner];
     } else if(depth >= 9){
         tie = false;
@@ -198,7 +195,7 @@ const minimax = (board, depth, isComputer) => {
                 board[i] = computer.getSign();
                 let score = minimax(board, depth + 1, false);
                 board[i] = '';
-                if(score >= bestScore && winDepth <= bestMoveDepth){
+                if(score >= bestScore || bestScore === 0){
                     bestMove = i;
                     bestMoveDepth = winDepth;
                 };
