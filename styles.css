@@ -4,8 +4,8 @@
     --secondary: #CCC8AA55;
     --tertiary: #191717;
     --text: #7D7C7C;
-    --win: rgba(49, 143, 2, 0.251);
-    --tie: rgba(214, 161, 62, 0.304);
+    --win: rgba(66, 178, 10, 0.684);
+    --tie: rgba(214, 161, 62, 0.616);
 }
 *{
     box-sizing: border-box;
@@ -18,7 +18,7 @@ body{
     height: 100%;
     width: 100%;
     margin: 0;
-    background-image: url(res/pexels-frans-van-heerden-1022692.jpg);
+    background-color: gray;
     font-family: Roboto;
     padding-top: 10px;
 }
