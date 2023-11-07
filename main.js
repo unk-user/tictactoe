@@ -35,8 +35,7 @@ const initGame = (event) => {
         player1.giveSign('O');
         computer.giveSign('X');
     }
-    game.gameBoard[4] = computer.getSign();
-    game.updateGridItem(computer.getSign(), 4);
+    game.updateGridItem(computer.getSign(), Math.round(Math.random() * 8));
     currentSign = player1.getSign();
     move = 1;
 }
@@ -178,15 +177,21 @@ let scores = {
     X: -1,
     tie: 0
 };
+let lastDepth = 10;
+let currentDepth;
 let bestScore = -Infinity;
 const minimax = (board, depth, isComputer) => {
     checkWinner();
-    checkTie();
-    if(win){
+    if(win && winner === computer.getSign()){
         win = false;
+        currentDepth = depth;
+        return scores[winner];
+    } else if(win && winner === player1.getSign()){
+        win = false; 
         return scores[winner];
     } else if(depth >= 9){
         tie = false;
+        currentDepth = depth;
         return 0;
     } else if(isComputer){
         bestScore = -Infinity;
@@ -195,11 +200,12 @@ const minimax = (board, depth, isComputer) => {
                 board[i] = computer.getSign();
                 let score = minimax(board, depth + 1, false);
                 board[i] = '';
-                if(score > bestScore || bestScore === 0){bestMove = i};
+                if(score > bestScore && currentDepth <= lastDepth){bestMove = i}
+                lastDepth = currentDepth;
                 bestScore = Math.max(score, bestScore);
             }
         }
-        return bestScore;
+        return bestMove;
     } else {
         bestScore = Infinity;
         for(let i = 0; i < board.length; i++){
